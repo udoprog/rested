@@ -2,31 +2,52 @@ __all__ = ["Metadata"]
 
 
 class Metadata(object):
+    """
+    Metadata that keeps track of registered entities.
+    """
+
     def __init__(self):
-        self.entities = dict()
+        self._entities = dict()
 
     def add_entity(self, entity, extra=None):
-        if entity.name in self.entities:
+        if entity.name in self._entities:
             raise ValueError(
                 "Entity already registered '{0}' ({1})".format(
                     entity.name, extra))
 
-        self.entities[entity.name] = (entity, extra)
+        self._entities[entity.name] = (entity, extra)
 
-    def resolve_entity(self, entity_name):
-        entity_data = self.entities.get(entity_name)
+    def get_entity(self, name):
+        entity_data = self._entities.get(name)
 
         if entity_data is None:
-            raise KeyError("No entity registered with name '{0}'".format(
-                entity_name))
+            raise KeyError(
+                "No entity registered with name '{0}'".format(
+                    name))
 
-        entity, extra = entity_data
+        return entity_data
 
-        entity.check()
+    def resolve_entity(self, name):
+        """
+        Iterative resolved for relation reference graphs.
+        """
+        original_entity, extra = self.get_entity(name)
+        original_entity.check()
 
-        relations = list()
+        original_relations = list()
 
-        for relation in entity.relations:
-            relations.append((relation, self.resolve_entity(relation.ref)))
+        queue = [(original_entity, original_relations)]
 
-        return entity, relations
+        while queue:
+            parent_entity, parent_relations = queue.pop()
+
+            for relation in parent_entity.relations:
+                entity, extra = self.get_entity(relation.ref)
+                entity.check()
+
+                relations = list()
+
+                parent_relations.append((relation, (entity, relations)))
+                queue.append((entity, relations))
+
+        return original_entity, original_relations
