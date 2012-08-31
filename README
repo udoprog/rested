@@ -1,0 +1,4 @@
+Rested - A CLI Generator
+------------------------
+
+Rested takes a Metadata declaration and generates a rest-like API for the CLI.
