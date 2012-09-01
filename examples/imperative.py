@@ -10,7 +10,7 @@ from rested.types import Integer
 from rested.relation import with_many
 from rested.relation import has_many
 
-from rested.brokers import HttpBroker
+from rested.broker.http import HttpBroker
 
 metadata = Metadata()
 

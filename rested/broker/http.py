@@ -1,19 +1,10 @@
+from rested.broker import Broker
 from rested.action import ACTION_TYPES
 
 __all__ = ["HttpBroker"]
 
 
-class _Broker(object):
-    def run(self, ns):
-        """
-        Run the resolved namespace against the specified broker.
-        """
-        raise NotImplemented("run")
-
-
-class HttpBroker(_Broker):
-    ACTION_TYPES = set(ACTION_TYPES)
-
+class HttpBroker(Broker):
     # Map to determine type of http request.
     #   method, body?
     #
@@ -31,7 +22,7 @@ class HttpBroker(_Broker):
         self.impl = impl
 
     def _yield_uri_parts(self, ns, path, action):
-        if action.action_type not in self.ACTION_TYPES:
+        if action.action_type not in ACTION_TYPES:
             raise RuntimeError(
                 "Unsupported action type '{0}'".format(
                     action.action_type))

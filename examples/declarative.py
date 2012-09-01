@@ -7,7 +7,7 @@ from rested.types import FieldType
 from rested.relation import has_many
 from rested.relation import has_one
 
-from rested.brokers import HttpBroker
+from rested.broker.http import HttpBroker
 
 from rested.ext.declarative import declarative_base
 
@@ -68,4 +68,5 @@ if __name__ == "__main__":
     entity, relations = Person.resolve()
     parser = create_restful_parser(entity, relations)
     ns = parser.parse_args()
+    print ns.which
     broker.run(ns)
