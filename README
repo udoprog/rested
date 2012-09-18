@@ -3,6 +3,13 @@ Rested - A CLI Generator
 
 Rested takes a Metadata declaration and generates a rest-like API for the CLI.
 
+Installation
+------------
+
+Pure python, install through pip:
+
+  pip install rested
+
 How to use rested
 -----------------
 
